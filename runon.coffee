@@ -58,6 +58,8 @@ ec2.describeInstances {Filters: [{Name: "tag:#{tag_bits[0]}", Values: [tag_bits[
 		resp = spawn 'ssh', ["ubuntu@" + instance.PrivateIpAddress, cmd]
 		resp.stdout.on 'data', (data) ->
 			console.log "#{instance_name}: #{data}"
+		resp.stderr.on 'data', (data) ->
+			console.log "#{instance_name}: #{data}"
 		resp.on 'close', (data) ->
 			console.log "Job's done on #{instance.PrivateIpAddress} (#{instance_name})"
 			cb()
