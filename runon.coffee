@@ -10,14 +10,18 @@ util = require 'util'
 
 tag = ""
 cmd = ""
+serial = false
 
-opt_parser = new mod_getopt.BasicParser('t:c:', process.argv)
+opt_parser = new mod_getopt.BasicParser('st:c:', process.argv)
 while ((option = opt_parser.getopt()) != undefined)
 	if option.option == 't'
 		tag = option.optarg
 
 	if option.option == 'c'
 		cmd = option.optarg
+
+	if option.option == 's'
+		serial = true
 
 if tag == "" or cmd == ""
 	console.log "Hi."
@@ -54,7 +58,11 @@ ec2.describeInstances {Filters: [{Name: "tag:#{tag_bits[0]}", Values: [tag_bits[
 		process.exit 1
 		return # lol
 
-	async.each instance_list, ((instance, cb) =>
+	acmd = async.each
+	if serial
+		acmd = async.eachSeries
+
+	acmd instance_list, ((instance, cb) =>
 		instance_name = itag.Value for itag in instance.Tags when itag.Key == 'Name'
 		resp = spawn 'ssh', ["#{config.ssh_user}@" + instance.PrivateIpAddress, cmd]
 		resp.stdout.on 'data', (data) ->
