@@ -1,0 +1,14 @@
+{
+  "name": "runon",
+  "author": "Antonio Lobato",
+  "description": "Run a given command on all machines with a given ec2 tag",
+  "dependencies": {
+    "aws-sdk": "*",
+    "async": "*",
+    "posix-getopt": "*"
+  },
+  "engines": {
+    "node": ">= 0.8.x",
+    "npm": ">= 1.1.x"
+  }
+}
