@@ -1,5 +1,6 @@
 #!/usr/bin/coffee
 AWS = require 'aws-sdk'
+config = require "#{__dirname}/config.json"
 AWS.config.loadFromPath "#{__dirname}/config.json"
 ec2 = new AWS.EC2()
 mod_getopt = require 'posix-getopt'
@@ -55,7 +56,7 @@ ec2.describeInstances {Filters: [{Name: "tag:#{tag_bits[0]}", Values: [tag_bits[
 
 	async.each instance_list, ((instance, cb) =>
 		instance_name = itag.Value for itag in instance.Tags when itag.Key == 'Name'
-		resp = spawn 'ssh', ["ubuntu@" + instance.PrivateIpAddress, cmd]
+		resp = spawn 'ssh', ["#{config.ssh_user}@" + instance.PrivateIpAddress, cmd]
 		resp.stdout.on 'data', (data) ->
 			console.log "#{instance_name}: #{data}"
 		resp.stderr.on 'data', (data) ->
