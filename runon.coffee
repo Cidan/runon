@@ -1,6 +1,6 @@
 #!/usr/bin/coffee
 AWS = require 'aws-sdk'
-AWS.config.loadFromPath './config.json'
+AWS.config.loadFromPath "#{__dirname}/config.json"
 ec2 = new AWS.EC2()
 mod_getopt = require 'posix-getopt'
 async = require 'async'
